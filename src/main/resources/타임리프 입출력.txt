@@ -1,0 +1,72 @@
+
+https://www.thymeleaf.org/
+
+1. html속성으로 출력
+
+2가지 경우가 있습니다.
+html의 내용으로 출력하는 경우와 속성의 값으로 출력하는 경우입니다.
+먼저, div나 h1, span등의 내용으로 출력하는 경우 th:text를 사용합니다.
+
+<div th:text="${message}">기본 메시지</div>
+<h1 th:text="${message}">기본 메시지</h1>
+
+이렇게 하면 <div>와 <h1>의 내용으로 출력됩니다.
+참고로 html태그가 포함된 내용을 출력할 때는 unescaped text를 출력해 주는 th:utext를 사용하면 된다.
+
+다음으로 속성에다 직접 값을 넣고자 할때는 속성이름 앞에 th:를 붙여주시면 됩니다.
+
+<input type="text" th:value="${message}" value="기본값">
+href, action, class, onclick 등 모든 속성에 다 사용 가능합니다. data-형식도 가능 합니다.
+
+위에서 "기본 메시지"나 "기본값"을 입력하는 이유는 타임리프를 인식하지 못하는 경우에도 정상적으로 보이도록 하기 위함입니다. 
+즉, 디자이너와의 협업을 위한 방식이라고 볼 수 있습니다.
+
+2. 반복출력
+<tbody>
+	<tr th:each="item : ${items}">
+		<td th:text="${item.idx}">no</td>
+		<td th:text="${item.title}">title</td>
+	</tr>
+</tbody>
+반복의 경우 th:each로 묶어주시면 됩니다.
+
+ 
+
+3. 속성내에 출력
+간혹 속성 전체가 아닌 일부의 내용에 추가 하고 싶을 때가 있는데, 이때는 텍스트 조합을 사용하시면됩니다.
+
+<div th:onclick="'clk_event1('+ ${item.menuid} + ')'">클릭</div>
+<div th:onclick="|clk_event1( ${item.menuid} )|">클릭</div>
+위 두가지 방법중 하나를 사용하시면 됩니다.
+
+4. javascript 안에 출력
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    var message = /*[[${message}]]*/ 'default';
+    console.log(message);
+
+/*]]>*/
+</script>
+script 태그에 속성으로 th:inline을 넣어주고,
+위와 같이 사용하시면 됩니다.
+
+
+5.html이 포함 되어있는 문자
+th:utext="${pageIndexList }
+
+
+6.onclick 를 이용하여 컨트롤러에서 넘겨받은 URL 변수로
+location.href 설정을 하고싶을때
+
+<input type="button" value=" 리스트 "
+th:onclick="'location.href=\'list.action?' + @{${param}} + '\''"/>
+
+
+7.th:href 처럼 URL 주소를 나타낼때는 @{ 문자 }
+
+문자열 /board/detail/과 ${question.id} 값이 조합일때는 |로 감싸줌
+<a th:href="@{|/boardn/detail/${question.id}|}"></a>
+
+
+
